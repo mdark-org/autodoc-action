@@ -1,5 +1,5 @@
-name: The name of your action here
-description: action to convert
+name: autodoc action
+description: autodoc action
 author: kt
 
 # select platform
