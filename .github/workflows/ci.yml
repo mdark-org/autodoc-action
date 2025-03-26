@@ -71,7 +71,7 @@ jobs:
           fi
       - name: get content
         if: ${{ steps.check-branch-exists.outputs.exists == 'false' || env.exec-even-exist == 'true' }}
-        uses: .
+        uses: ./
         with:
           token: ${{ secrets.GEMINI_TOKEN }}
           github-token: ${{ secrets.PAT }}
