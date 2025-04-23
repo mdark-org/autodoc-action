@@ -2,11 +2,6 @@ name: autodoc action
 description: autodoc action
 author: kt
 
-# select platform
-# get page by info
-# output => audio, video, image, text
-
-
 branding:
   icon: heart
   color: red
@@ -32,7 +27,6 @@ inputs:
     required: true
   exec-even-exist:
     description: "should continue if exist"
-    type: 'boolean'
     required: true
   branch:
     description: "branch to commit or pr"
@@ -79,7 +73,7 @@ runs:
       with:
         bvid: ${{ inputs.bvid }}
     - id: template-loader
-      uses: ./.github/actions/template-loader
+      uses: ktKongTong/autodoc-action/.github/actions/template-loader@v0.1.2
       with:
         variable: ${{steps.bili.outputs.video }}
         preset-filepath-template: ${{ inputs.filepath-template }}
@@ -97,11 +91,11 @@ runs:
         echo "prompt: ${{steps.template-loader.outputs.prompt-template}}"
         echo "system-prompt: ${{steps.template-loader.outputs.system-prompt-template }}"
     - id: path-resolver
-      uses: ./.github/actions/format
+      uses: ktKongTong/autodoc-action/.github/actions/format@v0.1.2
       with:
         variable: ${{ steps.bili.outputs.video }}
         template: ${{steps.template-loader.outputs.filepath-template}}
-        sanitize: 'true'
+        sanitize: "true"
     - name: checkout to another branch
       if: ${{ inputs.type=='commit' }}
       uses: actions/checkout@v4
@@ -124,7 +118,7 @@ runs:
           echo "continue=false" >> $GITHUB_OUTPUT
         fi
     - id: gen-prompt
-      uses: ./.github/actions/format
+      uses: ktKongTong/autodoc-action/.github/actions/format@v0.1.2
       if: ${{ steps.check-exist.outputs.continue == 'true' }}
       with:
         variable: ${{ steps.bili.outputs.video }}
@@ -132,21 +126,21 @@ runs:
           ${{steps.template-loader.outputs.prompt-template}}
     - id: gen-system-prompt
       if: ${{ steps.check-exist.outputs.continue == 'true' }}
-      uses: ./.github/actions/format
+      uses: ktKongTong/autodoc-action/.github/actions/format@v0.1.2
       with:
         variable: ${{ steps.bili.outputs.video }}
         template: |
           ${{steps.template-loader.outputs.system-prompt-template}}
     - id: download-audio
       if: ${{ steps.check-exist.outputs.continue == 'true' }}
-      uses: ./.github/actions/bili-download-audio
+      uses: ktKongTong/autodoc-action/.github/actions/bili-download-audio@v0.1.2
       with:
         bvid: ${{ fromJSON(steps.bili.outputs.video).bvid }}
         bili-proxy: ${{ inputs.bili-proxy }}
         sessdata: ${{ inputs.sessdata }}
     - id: stt
       if: ${{ steps.check-exist.outputs.continue == 'true' }}
-      uses: ./.github/actions/stt
+      uses: ktKongTong/autodoc-action/.github/actions/stt@v0.1.2
       with:
         filename: ${{ steps.download-audio.outputs.filename }}
         token: ${{ inputs.token }}
@@ -173,7 +167,7 @@ runs:
         rm -f tmp.json
     - id: gen-markdown
       if: ${{ steps.check-exist.outputs.continue == 'true' }}
-      uses: ./.github/actions/format
+      uses: ktKongTong/autodoc-action/.github/actions/format@v0.1.2
       with:
         variable: |
           ${{ steps.merge-param.outputs.result }}
@@ -200,16 +194,16 @@ runs:
         ls -l "$path"
     - id: gen-commit-message
       if: ${{ steps.check-exist.outputs.continue == 'true' }}
-      uses: ./.github/actions/format
+      uses: ktKongTong/autodoc-action/.github/actions/format@v0.1.2
       with:
         variable: ${{ steps.bili.outputs.video }}
         template: ${{steps.template-loader.outputs.commit-message-template}}
     - name: commit and push
       if: ${{ steps.check-exist.outputs.continue == 'true' }}
-      uses: ./.github/actions/pr-or-commit
+      uses: ktKongTong/autodoc-action/.github/actions/pr-or-commit@v0.1.2
       with:
         branch: ${{ inputs.branch }}
         message: ${{ steps.gen-commit-message.outputs.result }}
-        path: 'docs/**/*.md'
+        path: "docs/**/*.md"
         github-token: ${{ inputs.github-token }}
         type: ${{ inputs.type }}
