@@ -60,7 +60,7 @@ jobs:
         uses: mdark-org/bili-action@v0.2.11
         with:
           bvid: ${{ env.bvid }}
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Check if branch exists
         id: check-branch-exists
         run: |
