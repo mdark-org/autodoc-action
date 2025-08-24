@@ -18,9 +18,11 @@ runs:
   steps:
     - name: Setup FFmpeg
       uses: AnimMouse/setup-ffmpeg@v1
+      with:
+        version: 7.1
     - name: get and download video
       id: bili
-      uses: ktKongTong/bili-action@v0.2.11
+      uses: mdark-org/bili-action@v0.2.11
       with:
         bvid: ${{ inputs.bvid }}
         proxy-stream-host: ${{ inputs.bili-proxy }}

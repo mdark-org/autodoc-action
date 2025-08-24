@@ -66,7 +66,7 @@ runs:
         branch: ${{ env.branch }}
     - name: get video info
       id: bili
-      uses: ktKongTong/bili-action@v0.2.11
+      uses: mdark-org/bili-action@v0.2.11
       with:
         bvid: ${{ inputs.bvid }}
     - id: template-loader
